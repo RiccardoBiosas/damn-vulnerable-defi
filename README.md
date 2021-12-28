@@ -3,6 +3,6 @@
 - [x] Selfie
 - [x] Side-entrance
 - [x] The rewarder
-- [] Truster
+- [x] Truster
 - [x] Unstoppable
-- [] Compromised
+- [ ] Compromised
