@@ -5,4 +5,4 @@
 - [x] The rewarder
 - [x] Truster
 - [x] Unstoppable
-- [ ] Compromised
+- [x] Compromised

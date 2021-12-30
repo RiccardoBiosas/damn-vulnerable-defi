@@ -61,14 +61,17 @@ contract TrustfulOracle is AccessControl {
         renounceRole(INITIALIZER_ROLE, msg.sender);
     }
 
+    /// @notice wrapper around _setPrice, allows an authorized party to set the price for a given asset
     function postPrice(string calldata symbol, uint256 newPrice) external onlyTrustedSource {
         _setPrice(msg.sender, symbol, newPrice);
     }
 
+    /// @notice wrapper around _computeMedianPrice
     function getMedianPrice(string calldata symbol) external view returns (uint256) {
         return _computeMedianPrice(symbol);
     }
 
+    /// @notice fetches all the prices for a given asset from the trusted sources
     function getAllPricesForSymbol(string memory symbol) public view returns (uint256[] memory) {
         uint256 numberOfSources = getNumberOfSources();
         uint256[] memory prices = new uint256[](numberOfSources);
@@ -95,6 +98,7 @@ contract TrustfulOracle is AccessControl {
         emit UpdatedPrice(source, symbol, oldPrice, newPrice);
     }
 
+    /// @notice it builds an array of prices using the `getAllPricesForSymbol` function - which fetches all the prices for a given asset that have been provided by the trusted oracles- and then sorts the array in ascending order, the median is calculated on the array in ascending order. the median is then calculated on the sorted array, which makes the consumer contracts vulnerable to oracle manipulation 
     function _computeMedianPrice(string memory symbol) private view returns (uint256) {
         uint256[] memory prices = _sort(getAllPricesForSymbol(symbol));
 
@@ -108,6 +112,7 @@ contract TrustfulOracle is AccessControl {
         }
     }
 
+    /// @notice sorts a given array in ascending order
     function _sort(uint256[] memory arrayOfNumbers) private pure returns (uint256[] memory) {
         for (uint256 i = 0; i < arrayOfNumbers.length; i++) {
             for (uint256 j = i + 1; j < arrayOfNumbers.length; j++) {

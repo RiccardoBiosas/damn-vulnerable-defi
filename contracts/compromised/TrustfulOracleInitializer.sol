@@ -3,6 +3,7 @@ pragma experimental ABIEncoderV2;
 
 import "./TrustfulOracle.sol";
 
+/// @notice it deploys the TrustfulOracle contract and it's assigned the INITIALIZER_ROLE upon deployment
 contract TrustfulOracleInitializer {
 
     event NewTrustfulOracle(address oracleAddress);

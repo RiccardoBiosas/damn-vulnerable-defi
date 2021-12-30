@@ -23,6 +23,7 @@ contract Exchange is ReentrancyGuard {
         oracle = TrustfulOracle(oracleAddress);
     }
 
+    /// @notice it returns the difference between msg.value and the current nft's price if msg.sender sends too much
     function buyOne() external payable nonReentrant returns (uint256) {
         uint256 amountPaidInWei = msg.value;
         require(amountPaidInWei > 0, "Amount paid must be greater than zero");
@@ -32,7 +33,6 @@ contract Exchange is ReentrancyGuard {
         require(amountPaidInWei >= currentPriceInWei, "Amount paid is not enough");
 
         uint256 tokenId = token.mint(msg.sender);
-        
         msg.sender.sendValue(amountPaidInWei - currentPriceInWei);
 
         emit TokenBought(msg.sender, tokenId, currentPriceInWei);
@@ -40,6 +40,7 @@ contract Exchange is ReentrancyGuard {
         return tokenId;
     }
 
+    /// @notice allows a party to sell the nft to the exchange if the exchange has enough balance to buy it at the current market price (the market price relies on a trusted oracles setup)
     function sellOne(uint256 tokenId) external nonReentrant {
         require(msg.sender == token.ownerOf(tokenId), "Seller must be the owner");
         require(token.getApproved(tokenId) == address(this), "Seller must have approved transfer");
